@@ -326,6 +326,18 @@ kubectl get secret monitoring-grafana -n monitoring \
 
 ```
 ```
+now to delete the cluster:
+eksctl delete-cluster \
+--name flask-cluster  \
+--region eu-west-3
+then remove the cloudformation stack :
+aws cloudformation delete-stack \
+--stack-name eksctl-flask-cluster-cluster
+
+you may face some problems when your are gonna removing the stack so ask ai to give you more commands related to your case.
+
+```
+```
 once you did it 
 you can now  apply and build that promql commands on a new dashboard 
 or 
