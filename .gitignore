@@ -6,3 +6,4 @@ Project1/aws
 Project1/kind
 host_path/
 kind-config.yaml
+.gitignore
