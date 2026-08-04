@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+        <article class="media content-section">
+          <img 
+          src="{{ url_for('static',filename='images/'+post.author.image_file)}}" alt="post.author" class="rounded-circle article-img"
+          width="100"
+          height="100">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{url_for('posts.user_posts',username=post.author.username)}}">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime("%Y-%m-%d") }}</small>
+            </div>
+            <h2 class="article-title">{{ post.title }}</h2>
+            <p class="article-content">{{ post.content}}</p>
+            {% if post.author == current_user %}
+            <a href="{{url_for('posts.update_post',post_id=post.id)}}"
+            class="btn btn-outline-secondary btn-sm"
+            >
+             Update
+            </a>
+            <form style="display: inline;" action="{{url_for('posts.delete_post',post_id=post.id)}}" method="POST" onsubmit="return confirm('Are you want to delete this form????');">
+
+                {{form.hidden_tag()}}
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+            {% endif %}
+          </div>
+{% endblock content %}

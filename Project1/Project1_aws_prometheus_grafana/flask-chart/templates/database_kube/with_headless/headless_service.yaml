@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.config.flaskEnv}}-mariadb-headless
+  labels:
+    app: mariadb-{{.Values.config.flaskEnv}}
+spec:
+    ports:
+      - port: 3306
+        name: mysql
+    clusterIP: None
+    selector:
+      app: mariadb-{{.Values.config.flaskEnv}}

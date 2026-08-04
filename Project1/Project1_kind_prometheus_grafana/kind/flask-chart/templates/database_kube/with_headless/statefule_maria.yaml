@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{.Release.Name}}-mariadb
+spec:
+  serviceName: {{.Release.Name}}-mariadb-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: {{.Values.mariadb.image}}
+          ports: 
+            - containerPort: 3306
+          volumeMounts:
+            - name: maria-volume-mount
+              mountPath: /var/lib/mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Release.Name}}-maria-secret
+                  key:  MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Release.Name}}-maria-secret
+                  key: MYSQL_DATABASE
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Release.Name}}-maria-secret
+                  key:  MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Release.Name}}-maria-secret
+                  key: MYSQL_PASSWORD
+  volumeClaimTemplates:
+    - metadata:
+        name: maria-volume-mount
+      spec:
+        storageClassName: standard
+        accessModes: 
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{.Values.storage.databaseSize}}
+            #notice: we didn't make any pvc it will be automatically for each pod you will generate by replicas.
+
+

@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.config.flaskEnv}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Values.config.flaskEnv}}
+
+  template:
+    metadata:
+      labels:
+        app: {{.Values.config.flaskEnv}}
+    spec:
+      securityContext:
+       runAsUser: 1000
+       runAsGroup: 1000
+       fsGroup: 1000   #this ensure that the gp2(volume) can be ran by the user as it by default runs as root
+      containers:
+        - name: flask
+         # image: abdulrahmanqasim/flaskblog-multiplats:v1 
+          image: abdulrahmanqasim/flaskblog-multiplats-with-metrics:latest
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+          
+              memory: 512Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                -  ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: profile-storage
+              mountPath: /app/flaskblog/static/profile_pics
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: flask-secret-{{.Values.config.flaskEnv}}
+                  key: SECRET_KEY
+
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: flask-secret-{{.Values.config.flaskEnv}}
+                  key: DATABASE_URL
+                              
+
+            - name: FLASK_APP
+              valueFrom:
+                configMapKeyRef:
+                  name: flask-config-{{.Values.config.flaskEnv}}
+                  key: FLASK_APP
+      volumes:
+        - name: profile-storage
+          persistentVolumeClaim:
+            claimName: profile-pictures-pvc-{{.Values.config.flaskEnv}}
+
+

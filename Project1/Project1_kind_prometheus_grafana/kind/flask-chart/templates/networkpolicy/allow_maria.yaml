@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: maria-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: mariadb
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{.Release.Name}}
+      ports:
+        - protocol: TCP
+          port: 3306
+  policyTypes:
+    - Ingress

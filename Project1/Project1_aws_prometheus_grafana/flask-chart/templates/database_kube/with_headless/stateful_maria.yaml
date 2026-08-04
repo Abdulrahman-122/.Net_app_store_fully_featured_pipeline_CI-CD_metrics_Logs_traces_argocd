@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{.Values.config.flaskEnv}}-mariadb
+spec:
+  serviceName: {{.Values.config.flaskEnv}}-mariadb-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb-{{.Values.config.flaskEnv}}
+  template:
+    metadata:
+      labels:
+        app: mariadb-{{.Values.config.flaskEnv}}
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:12
+          ports: 
+            - containerPort: 3306
+          volumeMounts:
+            - name: maria-volume-mount-{{.Values.config.flaskEnv}}
+              mountPath: /var/lib/mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.config.flaskEnv}}-maria-secret
+                  key:  MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.config.flaskEnv}}-maria-secret
+                  key: MYSQL_DATABASE
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.config.flaskEnv}}-maria-secret
+                  key:  MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.config.flaskEnv}}-maria-secret
+                  key: MYSQL_PASSWORD
+  volumeClaimTemplates:
+    - metadata:
+        name: maria-volume-mount-{{.Values.config.flaskEnv}}
+      spec:
+        storageClassName: gp2
+        accessModes: 
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+            #notice: we didn't make any pvc it will be automatically for each pod you will generate by replicas.
+
+
+

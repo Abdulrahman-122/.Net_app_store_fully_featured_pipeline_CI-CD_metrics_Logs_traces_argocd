@@ -1,0 +1,14 @@
+docker_build(
+	"abdulrahmanqasim/flaskblog",
+	".",
+	
+)
+k8s_yaml(
+	helm(
+	    "./flask-chart",
+	    name="production",
+	    namespace="my-ns",
+	    values=["values.yaml"],
+	    )
+
+)

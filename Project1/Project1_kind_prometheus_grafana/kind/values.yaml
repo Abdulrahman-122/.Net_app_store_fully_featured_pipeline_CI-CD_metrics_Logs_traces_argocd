@@ -1,0 +1,39 @@
+replicaCount: 1
+image: 
+  repository: abdulrahmanqasim/flaskblog-multiplats-with-metrics
+  tag: latest
+  
+service:
+  type: NodePort
+  port: 5000
+  targetPort: 5000
+  nodePort: 30008
+mariadb:
+  image: mariadb:12
+  rootPassword: "1234Root"
+  database: "My_maria"
+  username: "maria"
+  password: "AppSecrets"
+config:
+  name: flask-config
+  flask_app: "run.py"
+  flaskEnv: "production"
+secret:
+  name: flask-secret
+
+storage:
+  claimname: profile-pictures-pvc
+  size: 500Mi
+  databaseSize: 2Gi
+
+resources:
+     requests:
+       cpu: "100m"
+       memory: "128Mi"
+     limits:
+        cpu: "500m"
+        memory: "512Mi"
+hpa:
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtil: 80

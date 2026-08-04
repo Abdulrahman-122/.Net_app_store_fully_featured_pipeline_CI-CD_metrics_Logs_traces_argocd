@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% endif %}
+    <style>
+        body{
+            font-family:Arial, Helvetica, sans-serif;
+            margin:20px;
+            background-color: darkkhaki;
+        } 
+        h1{
+            color:black;
+        }
+        table{
+            border-collapse:collapse;
+            width:80%;
+            margin:auto;
+            box-shadow:0 2px 8px gray;
+        }
+        th,td{
+            border:1px solid gray;
+            padding:10px;
+            text-align:left;
+        }
+        th{
+            background-color: lightgray;
+        }
+        tr:nth-child(even){
+            background-color:whitesmoke;
+        }
+        tr:hover{
+            background-color: lightyellow;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    username
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Hashed_password
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+

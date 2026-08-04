@@ -1,0 +1,54 @@
+{% extends "layout.html"%}
+{% block content %}
+<div class="d-flex align-items-center gap-4">
+<!-- d-flex->display items behind each other horizontally(image,name,email) -->
+<img src="{{ image_file }}"    
+
+class="rounded-circle img-profile"
+width="200"
+height="200">
+<div class="ms-4">
+    <h3>{{ current_user.username }}</h3>
+    <p class="text-muted mb-0">{{ current_user.email }}</p>
+<!-- text-muted(bootstrap class) -> show email as less important info  -->
+</div>
+</div>
+<hr class="my-4"> 
+<!-- add horizontal line with margin-y=4 spaces -->
+<form method="POST" action="" enctype="multipart/form-data">
+<!-- send data  when the user submit to the db+ action-> submit to the URL prvided but here no URL so it will still on the same  -->
+{{ form.hidden_tag() }}    
+<!-- this is generate a hidden  token with  the form to secure it while sending it to the database  -->
+
+<div class="form-group">
+    {{ form.username.label(class="form-control-label") }}
+    {{ form.username(class="form-control")  }}
+    {% for error in form.username.errors%}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+</div>
+<div class="form-group mt-4">
+    {{form.email.label(class="form-control-label")}}
+    {{form.email(class="form-control")}}
+    {% for error in form.email.errors%}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+</div>
+<div class="form-group mt-4 img-profile">
+    {{ form.picture.label(class="form-control-label d-block")}}
+    {{form.picture()}}
+    {% for error in form.picture.errors%}
+    <div class="text-danger">{{ error }}</div>
+    {% endfor %}
+</div>
+<div class="form-group mt-4">
+{{ form.submit(class="btn btn-primary")}}
+</div>
+</form>
+{% endblock content%}
+
+<!-- notes
+form-group	box around one field
+form-control-label	style the text label
+form-control	style the input itself 
+-->
