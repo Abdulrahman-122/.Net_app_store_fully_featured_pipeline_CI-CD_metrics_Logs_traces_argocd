@@ -11,6 +11,8 @@ import os
 from flaskblog.users.utils import generate_reset_token,check_reset_token,send_reset_email,save_picture
 from flaskblog.monitoring.routes import active_users,database_queries
 
+from flask import current_app
+
 print ("Users Gauge ID:",id(active_users))
 
 
@@ -20,7 +22,7 @@ users= Blueprint('users',__name__)
 
 @users.route('/login',methods=['GET','POST'])
 def login():
-    if current_user.is_authenticated:     # is authen means user is already logged in .
+    if current_user.is_authenticated:     # is authen means user is already logged in .        
         return redirect(url_for('users.profile'))
         
 
@@ -28,16 +30,19 @@ def login():
     if form.validate_on_submit():
         user=User.query.filter_by(email=form.email.data).first()              
         database_queries.inc()
-
         if user and bcrypt.check_password_hash(user.password,form.password.data):  
             login_user(user,remember=form.remember.data)    #log the user in if he checked remember me button -> it's session will be saved even if he close the browser in the last time            
             print("Before:",active_users._value.get())
             active_users.inc()
             print("After:",active_users._value.get())
+            current_app.logger.info(f"User {current_user.username} logged in successfully")
             flash('You have logged in successfully!!!','success')                #bootstrap class to make button green
             return redirect(url_for('users.profile'))                                        
         else:
-            flash('Login unsuccessfull.Please register first','danger')              #danger ->bootstrap class to make button red                           
+
+            flash('Login unsuccessfull.Please register first','danger')              #danger ->bootstrap class to make button red 
+            current_app.logger.warning(f"Login failed for email {form.email.data}")
+
             return redirect(url_for('users.register'))   
     return render_template('login.html', form=form)
 
@@ -52,9 +57,18 @@ def register():
             password=hashed_pass
         )
         db.session.add(user) # add new user to the current table 
-        db.session.commit() # save the session so that the user will be added permenantly to the database table.
+        
+        try:
+            db.session.commit() # save the session so that the user will be added permenantly to the database table.
+        except Exception:
+            current_app.logger.error(
+                    "Database commit failed",
+                    exc_info=True
+                    )
         flash('Your account has been created?you can now log in!','success')
+
         database_queries.inc()
+        current_app.logger.info(f"New user registered:{user.username}")
         return redirect(url_for('main.home'))
     return render_template('register.html',title='Register',form=form)
 
@@ -72,9 +86,10 @@ def admin_users():
 def logout():
     logout_user()                                      # this is class inside flask-login 
     flash('You have been logged out','info')         # flash temporary message for user to tell him that he now out of session
+    current_app.logger.info("Current user logged out")  
     active_users.dec()
     return redirect(url_for('users.login'))                  # return him to login
-@users.route('/profile',methods=['POST','GET'])
+@users.route('/profile',methods=['POST','GET'])    #Start Adding new logs from  here.
 @login_required
 def profile():
     form=UpdateProfileForm()
@@ -86,8 +101,16 @@ def profile():
 
         current_user.username=form.username.data
         current_user.email=form.email.data     #these two  lines updata the username,email of this user in DB
-        db.session.commit()                      #save  the changes to the DB
+        try:
+            db.session.commit() # save the session so that the user will be added permenantly to the database table.
+        except Exception:
+            current_app.logger.error(
+                    "Database commit failed",
+                    exc_info=True
+                    )
+                   #save  the changes to the DB
         flash('Your profile has been  updated!!!','success')
+        current_app.logger.info(f"{current_user.username} updated his profile") 
         return redirect(url_for('users.profile'))
     elif request.method=="GET":      #after redirection again to the same page(profile)+update the username,email fields with the updated info then render profile.html
         form.username.data=current_user.username
@@ -119,6 +142,7 @@ def change_password(token):
     user_id=check_reset_token(token)
 
     if not user_id:
+        current_app.logger.warning("Login failed for email due to it's not found so we can't add new password")
         flash('This email is invalid or expired','warning')
         return redirect(url_for('users.send_token'))
     user=User.query.get(user_id)  #after we checked the token and found a user id with it in db now let's pass the user_id into filter to get that user
@@ -127,7 +151,14 @@ def change_password(token):
     if form.validate_on_submit():
         hashed=bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user.password=hashed
-        db.session.commit()   #save the changes into DB
+       
+        try:
+           db.session.commit()   #save the changes into DB
+        except Exception:
+            current_app.logger.error(
+                    "Database commit failed",
+                    exc_info=True
+                    )
         flash('You have been added new password !!!!','success')
         return redirect(url_for('users.login'))
     return  render_template('change_password.html',form=form)

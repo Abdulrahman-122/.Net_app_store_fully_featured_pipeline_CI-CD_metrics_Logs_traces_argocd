@@ -7,3 +7,9 @@ Project1/kind
 host_path/
 kind-config.yaml
 .gitignore
+Project1/Project1_aws_prometheus_grafana
+Project1/Project1_docker_prometheus_grafana
+Project1/Project1_kind_Loki_promtail
+Project1/Project1_kind_opentelemetry_tempo
+Project1/Project1_kind_prometheus_grafana
+

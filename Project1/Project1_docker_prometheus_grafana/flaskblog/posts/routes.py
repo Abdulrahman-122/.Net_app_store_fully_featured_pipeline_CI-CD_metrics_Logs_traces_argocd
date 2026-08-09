@@ -22,8 +22,19 @@ def new_post():
         )
         db.session.add(post)
         database_queries.inc()
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception:
+            current_app.logger.error(
+                    "Database commit failed"
+                    ,
+                    exc_info=True
+                    )
+
         database_queries.inc()
+        current_app.logger.info(
+               f"Post{post.id} created by {current_user.username}"
+               )
         flash('You have added new Post successfully!!!','success')
         return  redirect(url_for('main.home'))
 
@@ -50,8 +61,16 @@ def update_post(post_id):
     if form.validate_on_submit():
         post.title=form.title.data
         post.content=form.content.data
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception:
+            current_app.logger.error(
+                    "Database commit failed"
+                    ,
+                    exc_info=True
+                    )
         flash('Post Updated successfully!!!','success')
+        current_app.logger.info(f" Post {post.id} updated by {current_user.username}")
         return redirect(url_for('posts.post',post_id=post.id))
  
  # this elif runs once you open the old post before you update it
@@ -70,8 +89,16 @@ def delete_post(post_id):
         abort(403)
     db.session.delete(post)
     database_queries.inc()
-    db.session.commit()
+    try:
+         db.session.commit()
+    except Exception:
+         current_app.logger.error(
+                    "Database commit failed"
+                    ,
+                    exc_info=True
+                    )
     database_queries.inc()
+    current_app.logger.info(f" Post {post.id} deleted by {current_user.username}")
     flash('Post had been deleted successfully!!!!','success')
     return redirect(url_for('main.home'))
 @posts.route('/user_posts/<string:username>/',methods=['GET','POST'])

@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}
+spec:
+  replicas: {{.Values.replicaCount}}
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}
+
+  template:
+    metadata:
+      labels:
+        app: {{.Release.Name}}
+    spec:
+      securityContext:
+       #runAsUser: 1000
+        runAsUser: 0
+       #runAsGroup: 1000
+      containers:
+        - name: flask
+         # image: abdulrahmanqasim/flaskblog-multiplats:v1 
+          image: {{.Values.image.repository}}:{{.Values.image.tag}}
+          ports:
+            - containerPort: {{.Values.service.port}}
+          resources:
+            requests:
+              cpu: {{.Values.resources.requests.cpu}}
+              memory: {{.Values.resources.requests.memory}}
+            limits:
+              cpu: {{.Values.resources.limits.cpu}}
+          
+              memory: {{.Values.resources.limits.memory}}
+         # securityContext:
+         #   runAsNonRoot: true
+          #  allowPrivilegeEscalation: false
+            #capabilities:
+            #  drop:
+            #    -  ALL
+            #seccompProfile:
+             # type: RuntimeDefault
+          volumeMounts:
+            - name: profile-storage
+              mountPath: /app/flaskblog/static/profile_pics
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.secret.name}}
+                  key: SECRET_KEY
+
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.secret.name}}
+                  key: DATABASE_URL
+                              
+
+            - name: FLASK_APP
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.config.name}}
+                  key: FLASK_APP
+
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-opentelemetry-collector.tracing.svc.cluster.local:4317"
+            - name: OTEL_SERVICE_NAME
+              value: "flaskblog"
+
+
+
+      volumes:
+        - name: profile-storage
+          persistentVolumeClaim:
+            claimName: {{.Values.storage.claimname}}
+
+

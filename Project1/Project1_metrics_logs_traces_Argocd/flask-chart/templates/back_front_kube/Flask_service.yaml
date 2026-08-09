@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+  labels:
+    app: {{.Release.Name}}
+spec:
+  type: {{.Values.service.type}}
+  selector:
+    app: {{.Release.Name}}
+  ports:
+    - name: http
+      port: {{.Values.service.port}}  #this is the port that the other internal service will call this service.
+      targetPort: {{.Values.service.targetPort}}
+      # nodePort: {{.Values.service.nodePort}} unhash in case you didn't use loadbalancer like traefik but in case you used it okay hash it.
+

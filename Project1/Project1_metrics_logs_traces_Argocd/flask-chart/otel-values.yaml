@@ -1,0 +1,38 @@
+mode: deployment
+image:
+  repository: otel/opentelemetry-collector-k8s
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+config:
+  receivers:
+    otlp:          #open telemetry protocol in order to receive traffic from app
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  processors:      # this answers how you will send traffic either in sequential way or parallel  way
+    batch: {}      # batch many  traffic then send it at once.
+  exporters:
+   # debug:          # this is the transmitter  called node debugger.
+      #verbosity: basic
+    otlp:
+        endpoint: tempo.tracing.svc.cluster.local:4317
+        tls:
+            insecure: true  
+  service:
+    pipelines:
+      traces:
+        receivers:
+          - otlp
+        processors:
+          - batch
+        exporters:
+          # - debug
+          - otlp

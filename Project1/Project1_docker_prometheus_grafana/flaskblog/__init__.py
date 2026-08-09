@@ -6,9 +6,16 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flaskblog.config import Config
 from flask_migrate import Migrate
+import logging,sys
+#for opentelemetry 
+from opentelemetry import trace
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+import os 
 
-
-  
     #as you see this recent two lines ->upload that folder name when need it instead of hardcoding of it.
 db=SQLAlchemy()   # create database manager to make tables and make your backend talk to the database
 bcrypt=Bcrypt()
@@ -18,6 +25,32 @@ mail=Mail()
 
 migrate=Migrate()
 
+
+logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout)    #this define the type of the stream that we want flask to extract from the app
+            ],
+        )
+
+#for opentelemetry
+resource=Resource.create({
+    "service.name": os.environ.get(
+        "OTEL_SERVICE_NAME",
+        "flaskblog"
+)
+    }
+                         )
+provider=TracerProvider(resource=resource)
+exporter=OTLPSpanExporter (
+        endpoint="http://otel-opentelemetry-collector.tracing.svc.cluster.local:4317",insecure=True) 
+
+
+processor=BatchSpanProcessor(exporter)
+provider.add_span_processor(processor)
+trace.set_tracer_provider(provider)
+
 def create_App(config_class=Config):  
     """return the app manager that we will use to build application"""
     app=Flask(__name__)
@@ -26,6 +59,7 @@ def create_App(config_class=Config):
     bcrypt.init_app(app)
     login_manager.init_app(app)   #this connect your flask app to flask login
     mail.init_app(app)
+    FlaskInstrumentor().instrument_app(app)
     from flaskblog import models
     migrate.init_app(app,db)
     from flaskblog.main.routes import main
@@ -61,6 +95,7 @@ def create_App(config_class=Config):
     app.register_blueprint(users)
     app.register_blueprint(errors)
     app.register_blueprint(monitoring)
+    app.logger.info("Flask application started")
 
     return app
 
