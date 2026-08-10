@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{.Values.config.name}}
-data:
-  FLASK_APP: {{.Values.config.flask_app| quote }}
-  FLASK_ENV: {{.Values.config.flaskEnv | quote }}
-

@@ -1,8 +1,0 @@
-apiVersion: v2
-name: flask-app
-description: chart for all environments
-type: application
-version: 0.1.0
-appVersion: "2.0"
-
-
