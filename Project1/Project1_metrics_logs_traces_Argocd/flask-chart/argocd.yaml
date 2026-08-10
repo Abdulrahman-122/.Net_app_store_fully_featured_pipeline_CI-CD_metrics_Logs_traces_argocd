@@ -4,6 +4,7 @@ metadata:
   name: flaskblog
   namespace: argocd
 spec:
+  project: default
   source:
     repoURL: https://github.com/Abdulrahman-122/Blog_bost_with_ArgoCd    
     targetRevision: HEAD
@@ -12,10 +13,12 @@ spec:
       valueFiles:
         - values.yaml
   destination:
-    server: https://kubernetes.default.svc  # this is the name of the cluster (dns name)  
+    server: https://kubernetes.default.svc
     namespace: my-ns
-  syncPolicy:  # what it will do when source,deestination differ.
-    automated:    #automatically apply git changes
-      prune: true  # delete the actual state in order to get to the desired state
-      selfHeal: true   # in order if you make changing at kubernetes rather than git  this command will recouncil your git with  your kubernetes.
+  syncPolicy:  # in order to make desired state like the actual state
+    automated:  #apply automatically
+      prune: true  # this will apply the changing on the cluster so that if some resources  need to be removed it will removed it.
+      selfHeal: true     # don't run  outofsync and stop start sync even if the desired state not like the actual state.
+
+
 
