@@ -14,7 +14,7 @@ spec:
         - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: my-ns
+    namespace: my-ns1
   syncPolicy:  # in order to make desired state like the actual state
     automated:  #apply automatically
       prune: true  # this will apply the changing on the cluster so that if some resources  need to be removed it will removed it.
