@@ -30,6 +30,7 @@ jobs:
           ruff check Project1/Project1_metrics_logs_traces_Argocd/software 
       - name: Check Black
         run: |
+          black Project1/Project1_metrics_logs_traces_Argocd/software
           black --check Project1/Project1_metrics_logs_traces_Argocd/software
       - name: Run pytest 
         run: |
