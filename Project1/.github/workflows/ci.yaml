@@ -1,0 +1,36 @@
+name: Flaskblog CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4  # this will help me to apply that ci workflow.
+      - name: Set up Python
+        uses: actions/setup-python@v5  # this will help github to install python from that marketplace .
+        with:
+          python-version: "3.14"    #this will install the python version
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip      #upgrade pip
+
+          #  to be completed
+
+          pip install -r  Project1/Project1_metrics_logs_traces_Argocd/software/requirements.txt
+          pip install ruff black pytest     #install requirments for testing the image that we used to build the entire app
+      - name: Run Ruff           #this is a beautiful command to test the whole software stuff    
+        run: |
+          ruff check Project1/Project1_metrics_logs_traces_Argocd/software 
+      - name: Check Black
+        run: |
+          black --check Project1/Project1_metrics_logs_traces_Argocd/software
+      - name: Run pytest 
+        run: |
+          pytest  Project1/Project1_metrics_logs_traces_Argocd/software

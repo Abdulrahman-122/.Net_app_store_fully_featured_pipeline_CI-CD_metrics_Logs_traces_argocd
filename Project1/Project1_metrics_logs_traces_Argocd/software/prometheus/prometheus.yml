@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: "flask-blog"
+    static_configs:
+      - targets:
+          - "backend_flask:5000"    #this is the name of flask service inside compose file

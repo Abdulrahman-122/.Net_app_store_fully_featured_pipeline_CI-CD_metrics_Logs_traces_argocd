@@ -1,6 +1,6 @@
 bin/
-.git
 .venv
+.git
 devbox.lock
 Project1/aws/
 Project1/kind/
