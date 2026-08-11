@@ -35,3 +35,15 @@ jobs:
       #- name: Run pytest 
         #run: |
           #pytest  Project1/Project1_metrics_logs_traces_Argocd/software
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build Docker image
+        run: |
+          docker buildx build \
+          --platform linux/arm64,linux/amd64 \
+          -t abdulrahmanqasim/multiplats-github-test:latest \
+      --push Project1/Project1_metrics_logs_traces_Argocd/software 
