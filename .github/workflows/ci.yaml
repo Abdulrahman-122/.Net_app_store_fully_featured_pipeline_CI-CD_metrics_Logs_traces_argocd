@@ -46,4 +46,4 @@ jobs:
           docker buildx build \
           --platform linux/arm64,linux/amd64 \
           -t abdulrahmanqasim/multiplats-github-test:latest \
-      --push Project1/Project1_metrics_logs_traces_Argocd/software 
+          --push Project1/Project1_metrics_logs_traces_Argocd/software 
