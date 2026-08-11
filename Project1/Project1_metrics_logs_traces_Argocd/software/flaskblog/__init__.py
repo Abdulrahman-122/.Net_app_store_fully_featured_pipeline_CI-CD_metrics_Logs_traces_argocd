@@ -1,20 +1,24 @@
-from flask import Flask , g  # g namespace scoped for a single requests.
+import logging
+import os
+import sys
 import time
-from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
+
+from flask import Flask, g  # g namespace scoped for a single requests.
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 from flask_mail import Mail
-from flaskblog.config import Config
 from flask_migrate import Migrate
-import logging,sys
+from flask_sqlalchemy import SQLAlchemy
+
 #for opentelemetry 
 from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
-import os 
+
+from flaskblog.config import Config
 
     #as you see this recent two lines ->upload that folder name when need it instead of hardcoding of it.
 db=SQLAlchemy()   # create database manager to make tables and make your backend talk to the database
@@ -60,14 +64,18 @@ def create_App(config_class=Config):
     login_manager.init_app(app)   #this connect your flask app to flask login
     mail.init_app(app)
     FlaskInstrumentor().instrument_app(app)
-    from flaskblog import models
+    # from flaskblog import models
     migrate.init_app(app,db)
-    from flaskblog.main.routes import main
-    from flaskblog.posts.routes import posts
-    from flaskblog.users.routes import users 
     from flaskblog.errors.handlers import errors
-    from flaskblog.monitoring.routes import monitoring
-    from flaskblog.monitoring.routes import http_requests,request_latency,http_errors
+    from flaskblog.main.routes import main
+    from flaskblog.monitoring.routes import (
+        http_errors,
+        http_requests,
+        monitoring,
+        request_latency,
+    )
+    from flaskblog.posts.routes import posts
+    from flaskblog.users.routes import users
     @app.before_request
     def count_requests():
         http_requests.inc()
@@ -84,6 +92,7 @@ def create_App(config_class=Config):
                     status_code=str(response.status_code)).inc()
         return response 
     from sqlalchemy import event
+
     from flaskblog.monitoring.routes import database_queries
     with app.app_context():
          @event.listens_for(db.engine,"before_cursor_execute")

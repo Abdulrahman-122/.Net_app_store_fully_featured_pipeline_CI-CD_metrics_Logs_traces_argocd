@@ -1,5 +1,7 @@
 import os
+
 from dotenv import load_dotenv
+
 load_dotenv()        # load all variables from .env that contain secret key,database uri...
 
 

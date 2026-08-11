@@ -1,6 +1,5 @@
-from flask import Blueprint,Response
-from prometheus_client import Counter,generate_latest,Gauge,Histogram
-
+from flask import Blueprint, Response
+from prometheus_client import Counter, Gauge, Histogram, generate_latest
 
 monitoring=Blueprint("monitoring",__name__)
 

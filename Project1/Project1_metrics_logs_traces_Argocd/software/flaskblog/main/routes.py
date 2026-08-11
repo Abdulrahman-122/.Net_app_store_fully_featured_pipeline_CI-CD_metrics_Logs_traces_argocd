@@ -1,9 +1,12 @@
-from flask  import render_template,url_for,flash,redirect,request,abort,Blueprint
-from flaskblog.posts.forms import PostForm,DeletePostForm
-from flaskblog import db
-from flaskblog.models import User,Post
-from flask_login import current_user ,login_required
-from flask import current_app     # this  is a flask obj application used to get the current running app that is running
+from flask import (
+    Blueprint,
+    current_app,  # this  is a flask obj application used to get the current running app that is running
+    render_template,
+    request,
+)
+from flask_login import current_user, login_required
+
+from flaskblog.models import Post
 from flaskblog.monitoring.routes import http_requests
 
 main=Blueprint('main',__name__)

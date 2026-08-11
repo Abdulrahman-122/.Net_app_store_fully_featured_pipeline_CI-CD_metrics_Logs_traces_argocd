@@ -1,10 +1,12 @@
 # start from database untill finish it then go to the next topic
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
-from flaskblog import db 
-from flaskblog import login_manager   #  look at __init__.py -> import from it the login_manager
+
 from flask_login import UserMixin
 
+from flaskblog import (
+    db,
+    login_manager,  #  look at __init__.py -> import from it the login_manager
+)
 
 
 class User(db.Model,UserMixin):
@@ -121,11 +123,9 @@ class Post(db.Model):  #   we need id for each post,title for each post,date of 
     # print("Users:")
     # for user in users:
         # print(user)  # This calls __repr__ if defined
-# 
     # Get all posts
     # posts = Post.query.all()
     # print("\nPosts:")
     # for post in posts:
         # print(post)  # Calls __repr__ too
         # print("Author:", post.author.username)  # because of backref 'author' in Post
-# 

@@ -1,17 +1,30 @@
-from flask  import Flask,render_template,url_for,flash,redirect,request,abort,Blueprint
-from flaskblog.users.forms import RegistrationForm,LoginForm,UpdateProfileForm,RequestRestForm,ResetPasswordForm
-from flaskblog.posts.forms import PostForm,DeletePostForm
-from flaskblog import bcrypt,db
-from flaskblog.models import User,Post
-from flask_login import login_user,current_user ,login_required,logout_user
-from flask import current_app     # this  is a flask obj application used to get the current running app that is running
-import secrets
-from  PIL import Image
-import os
-from flaskblog.users.utils import generate_reset_token,check_reset_token,send_reset_email,save_picture
-from flaskblog.monitoring.routes import active_users,database_queries
+from flask import (
+    Blueprint,
+    current_app,  # this  is a flask obj application used to get the current running app that is running
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from flask_login import current_user, login_required, login_user, logout_user
 
-from flask import current_app
+from flaskblog import bcrypt, db
+from flaskblog.models import User
+from flaskblog.monitoring.routes import active_users, database_queries
+from flaskblog.users.forms import (
+    LoginForm,
+    RegistrationForm,
+    RequestRestForm,
+    ResetPasswordForm,
+    UpdateProfileForm,
+)
+from flaskblog.users.utils import (
+    check_reset_token,
+    generate_reset_token,
+    save_picture,
+    send_reset_email,
+)
 
 print ("Users Gauge ID:",id(active_users))
 
@@ -61,9 +74,8 @@ def register():
         try:
             db.session.commit() # save the session so that the user will be added permenantly to the database table.
         except Exception:
-            current_app.logger.error(
-                    "Database commit failed",
-                    exc_info=True
+            current_app.logger.exception(
+                    "Database commit failed"
                     )
         flash('Your account has been created?you can now log in!','success')
 
@@ -104,9 +116,8 @@ def profile():
         try:
             db.session.commit() # save the session so that the user will be added permenantly to the database table.
         except Exception:
-            current_app.logger.error(
-                    "Database commit failed",
-                    exc_info=True
+            current_app.logger.exception(
+                    "Database commit failed"
                     )
                    #save  the changes to the DB
         flash('Your profile has been  updated!!!','success')
@@ -155,9 +166,8 @@ def change_password(token):
         try:
            db.session.commit()   #save the changes into DB
         except Exception:
-            current_app.logger.error(
-                    "Database commit failed",
-                    exc_info=True
+            current_app.logger.exception(
+                    "Database commit failed"
                     )
         flash('You have been added new password !!!!','success')
         return redirect(url_for('users.login'))

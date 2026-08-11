@@ -1,11 +1,19 @@
-from flask  import render_template,url_for,flash,redirect,request,abort,Blueprint
-from flaskblog.posts.forms import PostForm,DeletePostForm
-from flaskblog import db
-from flaskblog.models import User,Post
-from flask_login import current_user ,login_required
-from flask import current_app     # this  is a flask obj application used to get the current running app that is running
-from flaskblog.monitoring.routes import database_queries
+from flask import (
+    Blueprint,
+    abort,
+    current_app,  # this  is a flask obj application used to get the current running app that is running
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from flask_login import current_user, login_required
 
+from flaskblog import db
+from flaskblog.models import Post, User
+from flaskblog.monitoring.routes import database_queries
+from flaskblog.posts.forms import DeletePostForm, PostForm
 
 posts= Blueprint('posts',__name__)
 
@@ -25,10 +33,9 @@ def new_post():
         try:
             db.session.commit()
         except Exception:
-            current_app.logger.error(
+            current_app.logger.exception(
                     "Database commit failed"
-                    ,
-                    exc_info=True
+                    
                     )
 
         database_queries.inc()
@@ -64,10 +71,9 @@ def update_post(post_id):
         try:
             db.session.commit()
         except Exception:
-            current_app.logger.error(
+            current_app.logger.exception(
                     "Database commit failed"
-                    ,
-                    exc_info=True
+                    
                     )
         flash('Post Updated successfully!!!','success')
         current_app.logger.info(f" Post {post.id} updated by {current_user.username}")
@@ -92,10 +98,9 @@ def delete_post(post_id):
     try:
          db.session.commit()
     except Exception:
-         current_app.logger.error(
+        current_app.logger.exception(
                     "Database commit failed"
-                    ,
-                    exc_info=True
+                    
                     )
     database_queries.inc()
     current_app.logger.info(f" Post {post.id} deleted by {current_user.username}")
