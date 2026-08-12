@@ -41,7 +41,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Build Docker image
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v3        
+      - name: Build and push multi-platform image
         run: |
           docker buildx build \
           --platform linux/arm64,linux/amd64 \
