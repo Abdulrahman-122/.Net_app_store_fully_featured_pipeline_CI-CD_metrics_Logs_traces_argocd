@@ -71,7 +71,7 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
       - name: Get version
         id: version
-        runs: |
+        run: |
           VERSION="${GITHUB_REF_NAME#v}"    #this extract the version from git versions
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
