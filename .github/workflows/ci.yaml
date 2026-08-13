@@ -35,8 +35,28 @@ jobs:
       #- name: Run pytest 
         #run: |
           #pytest  Project1/Project1_metrics_logs_traces_Argocd/software
-  docker:
+  
+
+  helm:
     needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+      - name: Helm lint
+        run: |
+          helm lint  Project1/Project1_metrics_logs_traces_Argocd/flask-chart  
+          # note that this lint will check whether or not this helm chart is valid or not
+          # if it valid -> it will be  1 linted + 0 charts failed.
+      - name: Render Helm templates
+        run: |
+          helm template flaskblog \
+           Project1/Project1_metrics_logs_traces_Argocd/flask-chart  
+
+  docker:
+    needs: helm
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
