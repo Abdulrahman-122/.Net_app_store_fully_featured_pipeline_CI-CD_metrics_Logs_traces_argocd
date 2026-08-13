@@ -74,4 +74,19 @@ jobs:
           docker buildx build \
           --platform linux/arm64,linux/amd64 \
           -t abdulrahmanqasim/multiplats-github-test:latest \
-          --push Project1/Project1_metrics_logs_traces_Argocd/software 
+          --push Project1/Project1_metrics_logs_traces_Argocd/software
+
+
+  security:
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: abdulrahmanqasim/multiplats-github-test:latest
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+
