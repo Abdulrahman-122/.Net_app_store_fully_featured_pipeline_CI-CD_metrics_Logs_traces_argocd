@@ -1,7 +1,7 @@
 replicaCount: 2   #changed to test ArgoCD
 image: 
   repository: abdulrahmanqasim/blog-metrics-logs-telemetry
-  tag: latest
+  tag: ""
 
 service:
  # type: NodePort use this in case you didn't use any Loadbalance
