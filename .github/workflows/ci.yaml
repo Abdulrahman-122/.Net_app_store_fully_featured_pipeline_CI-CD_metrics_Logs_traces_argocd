@@ -78,7 +78,6 @@ jobs:
   security:
     needs:
       - docker
-      - security-dependencies
     runs-on: ubuntu-latest
     steps:
       - name: Run Trivy
