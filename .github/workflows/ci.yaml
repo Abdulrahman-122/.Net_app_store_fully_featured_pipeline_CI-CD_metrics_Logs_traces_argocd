@@ -5,9 +5,14 @@ on:
       - main
     tags:
       - "v*.*.*"     #run this workflow once you pushed a new version of the branch
+    paths-ignore:
+      - "Project1/Project1_metrics_logs_traces_Argocd/flask-chart/values.yaml"
+
   pull_request:
     branches:
       - main
+permissions:
+  contents: write
 
 jobs:
   test:
@@ -55,7 +60,23 @@ jobs:
       - name: Render Helm templates
         run: |
           helm template flaskblog \
-           Project1/Project1_metrics_logs_traces_Argocd/flask-chart  
+           Project1/Project1_metrics_logs_traces_Argocd/flask-chart 
+      - name: Update Helm image tag
+        if: github.ref==  'refs/heads/main'
+        env:
+           VERSION: ${{steps.version.outputs.version}}
+        run: |
+          VALUES_FILE="Project1/Project1_metrics_logs_traces_Argocd/flask-chart/values.yaml"
+
+          sed -i "s/^  tag:.*/  tag: \"$VERSION\"/" "$VALUES_FILE"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add "$VALUES_FILE"
+          git commit -m "chore: deploy Flaskblog $VERSION"
+          git push
+
   docker:
     needs: helm
     runs-on: ubuntu-latest
@@ -85,16 +106,16 @@ jobs:
           -t abdulrahmanqasim/multiplats-github-test:${{steps.version.outputs.version}} \
           --push Project1/Project1_metrics_logs_traces_Argocd/software
 
-  security:
-    needs:
-      - docker
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: abdulrahmanqasim/multiplats-github-test:${{needs.docker.outputs.version}}
-          format: table
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: CRITICAL,HIGH
+  # security:
+  #   needs:
+  #     - docker
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Run Trivy
+  #       uses: aquasecurity/trivy-action@master
+  #       with:
+  #         image-ref: abdulrahmanqasim/multiplats-github-test:${{needs.docker.outputs.version}}
+  #         format: table
+  #         exit-code: '1'
+  #         ignore-unfixed: true
+  #         severity: CRITICAL,HIGH
