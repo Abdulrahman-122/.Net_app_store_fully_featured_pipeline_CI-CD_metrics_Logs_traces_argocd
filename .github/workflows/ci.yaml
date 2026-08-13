@@ -54,7 +54,6 @@ jobs:
         run: |
           helm template flaskblog \
            Project1/Project1_metrics_logs_traces_Argocd/flask-chart  
-
   docker:
     needs: helm
     runs-on: ubuntu-latest
@@ -76,9 +75,10 @@ jobs:
           -t abdulrahmanqasim/multiplats-github-test:latest \
           --push Project1/Project1_metrics_logs_traces_Argocd/software
 
-
   security:
-    needs: docker
+    needs:
+      - docker
+      - security-dependencies
     runs-on: ubuntu-latest
     steps:
       - name: Run Trivy
@@ -89,4 +89,3 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           severity: CRITICAL,HIGH
-
