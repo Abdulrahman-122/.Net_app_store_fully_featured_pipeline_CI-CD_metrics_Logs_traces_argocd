@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "v*.*.*"     #run this workflow once you pushed a new version of the branch
   pull_request:
     branches:
       - main
@@ -67,12 +69,20 @@ jobs:
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
-          
+      - name: Get version
+        id: version
+        runs: |
+          VERSION="${GITHUB_REF_NAME#v}"    #this extract the version from git versions
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+
+
+
       - name: Build and push multi-platform image
         run: |
           docker buildx build \
           --platform linux/arm64,linux/amd64 \
-          -t abdulrahmanqasim/multiplats-github-test:latest \
+          -t abdulrahmanqasim/multiplats-github-test:${{steps.version.outputs.version}} \
           --push Project1/Project1_metrics_logs_traces_Argocd/software
 
   security:
@@ -83,7 +93,7 @@ jobs:
       - name: Run Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: abdulrahmanqasim/multiplats-github-test:latest
+          image-ref: abdulrahmanqasim/multiplats-github-test:${{needs.docker.outputs.version}}
           format: table
           exit-code: '1'
           ignore-unfixed: true
