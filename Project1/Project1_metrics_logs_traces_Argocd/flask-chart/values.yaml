@@ -1,7 +1,15 @@
 replicaCount: 2   #changed to test ArgoCD
 image: 
+<<<<<<< HEAD
   repository: abdulrahmanqasim/multiplats-github-test
   tag: main
+=======
+ # repository: abdulrahmanqasim/blog-metrics-logs-telemetry
+ # tag: ""
+  repository: abdulrahmanqasim/multiplats-github-test
+  tag: v1.0.0 
+
+>>>>>>> 87aad0f (Fix: servicemonitor)
 service:
  # type: NodePort use this in case you didn't use any Loadbalance
   type: ClusterIP
