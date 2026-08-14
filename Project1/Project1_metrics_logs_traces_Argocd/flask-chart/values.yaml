@@ -1,11 +1,14 @@
 replicaCount: 2   #changed to test ArgoCD
 image: 
 <<<<<<< HEAD
+<<<<<<< HEAD
   repository: abdulrahmanqasim/multiplats-github-test
   tag: main
 =======
  # repository: abdulrahmanqasim/blog-metrics-logs-telemetry
  # tag: ""
+=======
+>>>>>>> f1e973e (Add image in order to sync ith ArgoCd)
   repository: abdulrahmanqasim/multiplats-github-test
   tag: v1.0.0 
 
