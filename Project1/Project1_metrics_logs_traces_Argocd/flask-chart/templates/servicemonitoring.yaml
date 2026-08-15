@@ -8,7 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: dev
+      app: flaskblog
   namespaceSelector:
     matchNames:
       - my-ns1
