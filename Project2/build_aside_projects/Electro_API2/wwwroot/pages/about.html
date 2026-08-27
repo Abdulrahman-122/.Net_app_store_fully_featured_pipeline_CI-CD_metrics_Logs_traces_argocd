@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ElectroStore — About</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#090d12;--surface:#111720;--surface2:#171f2b;--border:#1e2a38;--accent:#00e5ff;--accent2:#7b5ea7;--text:#f0f4f8;--text-muted:#94a3b8;--shadow:0 24px 48px rgba(0,0,0,.4);}
+body.light{--bg:#f2f5f9;--surface:#ffffff;--surface2:#f7f9fc;--border:#dde3ec;--accent:#0077bb;--accent2:#6b46a8;--text:#111827;--text-muted:#4b5563;--shadow:0 16px 36px rgba(0,0,0,.08);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);background-size:48px 48px}
+body.light .bg-grid{background-image:linear-gradient(rgba(0,119,170,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,119,170,.05) 1px,transparent 1px)}
+.bg-glow{position:fixed;width:700px;height:700px;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;opacity:.08}
+.glow-1{background:var(--accent);top:-220px;right:-180px;animation:g1 10s ease-in-out infinite}
+.glow-2{background:var(--accent2);bottom:-240px;left:-180px;animation:g2 12s ease-in-out infinite}
+@keyframes g1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,30px)}}@keyframes g2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+.page-wrapper{position:relative;z-index:1}
+.navbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:0 56px;height:68px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
+.navbar-logo{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--accent);text-decoration:none;letter-spacing:-.2px;text-shadow:0 4px 16px rgba(0,229,255,.18)}
+.nav-links{display:flex;align-items:center;gap:24px;flex:1 1 auto;min-width:0;overflow:hidden}
+.nav-links a{text-decoration:none;color:var(--text-muted);font-size:11px;font-weight:500;letter-spacing:1.6px;text-transform:uppercase;transition:color .25s;position:relative;white-space:nowrap}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.nav-icon-btn{min-width:42px;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.nav-icon-btn:hover{border-color:var(--accent);background:rgba(0,229,255,.08)}
+.hero{max-width:1200px;margin:56px auto 40px;padding:0 56px}
+.hero-title{font-family:'Syne',sans-serif;font-size:54px;font-weight:800;line-height:1.02;letter-spacing:-1px;margin-bottom:18px;color:var(--text)}
+.hero-title span{color:var(--accent)}
+.hero-copy{max-width:780px;font-size:16px;line-height:1.9;color:var(--text-muted);margin-bottom:28px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+.feature-card{background:var(--surface2);border:1px solid var(--border);border-radius:22px;padding:28px;box-shadow:var(--shadow);transition:all .25s}
+.feature-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.feature-card h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text)}
+.feature-card p{color:var(--text-muted);font-size:14px;line-height:1.8}
+.section{max-width:1200px;margin:0 auto 40px;padding:0 56px}
+.section-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;margin-bottom:22px;color:var(--text)}
+.section-copy{max-width:820px;color:var(--text-muted);line-height:1.9;margin-bottom:24px}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step-card{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:24px;transition:all .25s}
+.step-card:hover{border-color:var(--accent)}
+.step-number{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent);margin-bottom:12px}
+.step-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px}
+.step-copy{color:var(--text-muted);font-size:14px;line-height:1.8}
+.footer{background:var(--surface);border-top:1px solid var(--border);padding:30px 56px 40px;margin-top:20px}
+.footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center}
+.footer-copy{color:var(--text-muted);font-size:13px;line-height:1.8}
+.footer-links{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.footer-links a{color:var(--text-muted);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--accent)}
+@media(max-width:1024px){.navbar{padding:0 24px}.hero,.section,.footer{padding:0 24px}.feature-grid,.steps-grid{grid-template-columns:1fr 1fr}.hero-title{font-size:46px}}
+@media(max-width:720px){.nav-links{display:none}.hero-title{font-size:36px}.feature-grid,.steps-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow glow-1"></div>
+<div class="bg-glow glow-2"></div>
+<div class="page-wrapper">
+<nav class="navbar">
+<a href="dashboard.html" class="navbar-logo">⚡ ElectroStore</a>
+<div class="nav-links">
+<a href="dashboard.html">Shop</a>
+<a href="about.html" class="active">About</a>
+<a href="contact.html">Contact</a>
+</div>
+<div class="nav-right">
+<button class="nav-icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</button>
+</div>
+</nav>
+<section class="hero">
+<p class="hero-title">About <span>ElectroStore</span></p>
+<p class="hero-copy">ElectroStore is a clean, modern electronics storefront built for fast browsing, simple cart management, and easy admin control. It connects to a backend API, preserves dark/light theme preference, and gives users a polished shopping experience across every device.</p>
+</section>
+<section class="section">
+<h2 class="section-title">What this app delivers</h2>
+<p class="section-copy">From product discovery to checkout, ElectroStore is designed to feel smooth and reliable. The application includes a responsive product catalog, cart management, product details, admin dashboard, and route-based navigation for pages like About and Contact.</p>
+<div class="feature-grid">
+<div class="feature-card"><h3>Fast product browsing</h3><p>Explore products with clear pricing, stock status, and a polished layout that keeps every item easy to scan.</p></div>
+<div class="feature-card"><h3>Smart cart experience</h3><p>Quantity controls, subtotals, and a totals summary make shopping intuitive and predictable.</p></div>
+<div class="feature-card"><h3>Admin controls</h3><p>Manage products, orders, customers, and categories from a dedicated admin dashboard.</p></div>
+<div class="feature-card"><h3>Dark mode support</h3><p>Toggle between dark and light themes with persistent settings stored in browser memory.</p></div>
+<div class="feature-card"><h3>Modern interface</h3><p>A refined visual system with glowing accents, glass-like cards, and responsive layouts for phones and desktops.</p></div>
+<div class="feature-card"><h3>API-powered</h3><p>Uses a backend API for product data while keeping frontend pages self-contained and easy to maintain.</p></div>
+</div>
+</section>
+<section class="section">
+<h2 class="section-title">How it works</h2>
+<div class="steps-grid">
+<div class="step-card"><div class="step-number">1</div><p class="step-title">Browse products</p><p class="step-copy">Open the shop page and explore the catalog with product cards that show images, names, and prices.</p></div>
+<div class="step-card"><div class="step-number">2</div><p class="step-title">View details</p><p class="step-copy">Open a product page to see full specifications, stock status, and add items to your cart.</p></div>
+<div class="step-card"><div class="step-number">3</div><p class="step-title">Contact support</p><p class="step-copy">Use the Contact page to reach the admin for help, questions, or feedback about the application.</p></div>
+</div>
+</section>
+<footer class="footer">
+<div class="footer-grid">
+<p class="footer-copy">ElectroStore is created to showcase a modern store experience with dynamic content, smooth interactions, and consistent styling. Enjoy a seamless shopping flow across pages like Dashboard, About, and Contact.</p>
+<div class="footer-links"><a href="dashboard.html">Shop</a><a href="contact.html">Contact</a></div>
+</div>
+</footer>
+</div>
+<script>
+function toggleTheme(){document.body.classList.toggle('light');const isLight=document.body.classList.contains('light');document.getElementById('themeBtn').textContent=isLight?'☀️':'🌙';localStorage.setItem('theme',isLight?'light':'dark');}
+function loadTheme(){const saved=localStorage.getItem('theme');if(saved==='light'){document.body.classList.add('light');document.getElementById('themeBtn').textContent='☀️';}}
+window.onload=loadTheme;
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: electro-mariadb
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD","healthcheck.sh","--connect","--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+    networks:
+      - electro-network 
+  electro-api:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      container_name: electro-api
+      depends_on: 
+       mariadb:
+        condition: service_healthy
+      environment:
+          ASPNETCORE_ENVIRONMENT: Development
+          ASPNETCORE_URLS: http://+:8080
+          ConnectionStrings__DefaultConnection: ${DB_CONNECTION_STRING}
+          Jwt__Key: ${JWT_KEY}
+          Jwt__Issuer: ${JWT_ISSUER}
+          Jwt__Audience: ${JWT_AUDIENCE}
+      ports:
+         - "5000:5000"
+      restart: unless-stopped
+      networks:
+        - electro-network
+
+volumes:
+  mariadb_data:
+networks:
+  electro-network:
+    driver: bridge # this is safe driver to make sure that the connection between database,api is running correctly.
+    # you can use the default network rather than creating new network on your machine.
+    #
+
+

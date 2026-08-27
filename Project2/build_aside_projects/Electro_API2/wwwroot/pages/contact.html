@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ElectroStore — Contact</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#090d12;--surface:#111720;--surface2:#171f2b;--border:#1e2a38;--accent:#00e5ff;--accent2:#7b5ea7;--text:#f0f4f8;--text-muted:#94a3b8;--shadow:0 24px 48px rgba(0,0,0,.4);}
+body.light{--bg:#f2f5f9;--surface:#ffffff;--surface2:#eef4fb;--border:#dde3ec;--accent:#0077bb;--accent2:#6b46a8;--text:#111827;--text-muted:#4b5563;--shadow:0 16px 36px rgba(0,0,0,.08);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s}
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);background-size:48px 48px}
+body.light .bg-grid{background-image:linear-gradient(rgba(0,119,170,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,119,170,.05) 1px,transparent 1px)}
+.bg-glow{position:fixed;width:700px;height:700px;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;opacity:.08}
+.glow-1{background:var(--accent);top:-220px;right:-180px;animation:g1 10s ease-in-out infinite}
+.glow-2{background:var(--accent2);bottom:-240px;left:-180px;animation:g2 12s ease-in-out infinite}
+@keyframes g1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,30px)}}@keyframes g2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+.page-wrapper{position:relative;z-index:1}
+.navbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:0 56px;height:68px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
+.navbar-logo{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--accent);text-decoration:none;letter-spacing:-.2px;text-shadow:0 4px 16px rgba(0,229,255,.18)}
+.nav-links{display:flex;align-items:center;gap:24px;flex:1 1 auto;min-width:0;overflow:hidden}
+.nav-links a{text-decoration:none;color:var(--text-muted);font-size:11px;font-weight:500;letter-spacing:1.6px;text-transform:uppercase;transition:color .25s;position:relative;white-space:nowrap}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.nav-icon-btn{min-width:42px;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.nav-icon-btn:hover{border-color:var(--accent);background:rgba(0,229,255,.08)}
+.hero{max-width:1200px;margin:56px auto 24px;padding:0 56px}
+.hero-title{font-family:'Syne',sans-serif;font-size:52px;font-weight:800;line-height:1.02;letter-spacing:-1px;margin-bottom:18px;color:var(--text)}
+.hero-title span{color:var(--accent)}
+.hero-copy{max-width:760px;font-size:16px;line-height:1.9;color:var(--text-muted);margin-bottom:28px}
+.contact-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;max-width:1200px;margin:0 auto;padding:0 56px}
+.contact-card{background:var(--surface2);border:1px solid var(--border);border-radius:24px;padding:30px;box-shadow:var(--shadow);}
+.contact-card h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--text);margin-bottom:16px}
+.contact-copy{color:var(--text-muted);line-height:1.9;margin-bottom:20px}
+.contact-list{list-style:none;display:flex;flex-direction:column;gap:16px}
+.contact-list li{display:flex;align-items:flex-start;gap:14px;color:var(--text);font-size:14px}
+.contact-list li span{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:12px;background:rgba(0,229,255,.12);color:var(--accent);font-size:18px;margin-top:2px}
+.contact-list strong{display:block;font-weight:700;color:var(--text);margin-bottom:4px}
+.map-card{background:var(--surface2);border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}
+.map-card img{width:100%;height:100%;display:block;object-fit:cover}
+.footer{max-width:1200px;margin:32px auto 60px;padding:0 56px}
+.footer-links{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.footer-links a{color:var(--text-muted);text-decoration:none;font-size:13px}
+.footer-links a:hover{color:var(--accent)}
+@media(max-width:1024px){.navbar{padding:0 24px}.hero,.contact-grid,.footer{padding:0 24px}.contact-grid{grid-template-columns:1fr}.hero-title{font-size:42px}}
+@media(max-width:720px){.nav-links{display:none}.hero-title{font-size:34px}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow glow-1"></div>
+<div class="bg-glow glow-2"></div>
+<div class="page-wrapper">
+<nav class="navbar">
+<a href="dashboard.html" class="navbar-logo">⚡ ElectroStore</a>
+<div class="nav-links">
+<a href="dashboard.html">Shop</a>
+<a href="about.html">About</a>
+<a href="contact.html" class="active">Contact</a>
+</div>
+<div class="nav-right">
+<button class="nav-icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</button>
+</div>
+</nav>
+<section class="hero">
+<p class="hero-title">Contact <span>ElectroStore Admin</span></p>
+<p class="hero-copy">Need help with your order, product questions, or site access? Reach the admin team directly through the details below. We’re here to support your store experience.</p>
+</section>
+<div class="contact-grid">
+<div class="contact-card">
+<h2>Administrator</h2>
+<p class="contact-copy">Use these direct lines to contact the ElectroStore admin. For application support, product updates, or access requests, the admin is the best point of contact.</p>
+<ul class="contact-list">
+<li><span>📧</span><div><strong>Email</strong><p><strong><a href="mailto:abdulrahman11510.qasim@gmail.com">Contact us via Email</a></strong></p>
+
+</div></li>
+<li><span>📱</span><div><strong>Phone</strong>        <p><strong><a href="tel:01065788879">Contact us via phone</a></strong></p></div></li>
+<li><span>🕒</span><div><strong>Office Hours</strong>Sun–Thu, 9:00 AM – 6:00 PM</div></li>
+<li><span>📍</span><div><strong>Location</strong>Elshorouk City, Cairo, Egypt</div></li>
+</ul>
+</div>
+<div class="map-card">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOYQ4H2iPUJA5qZ5u0IHFMj2GuR8ZoaTLTHpjuxX0Ogg&s=10" alt="ElectroStore Admin Location" />
+</div>
+</div>
+<div class="footer">
+<div class="footer-links"><a href="dashboard.html">Shop</a><a href="about.html">About</a></div>
+</div>
+</div>
+<script>
+function toggleTheme(){document.body.classList.toggle('light');const isLight=document.body.classList.contains('light');document.getElementById('themeBtn').textContent=isLight?'☀️':'🌙';localStorage.setItem('theme',isLight?'light':'dark');}
+function loadTheme(){const saved=localStorage.getItem('theme');if(saved==='light'){document.body.classList.add('light');document.getElementById('themeBtn').textContent='☀️';}}
+window.onload=loadTheme;
+</script>
+</body>
+</html>
