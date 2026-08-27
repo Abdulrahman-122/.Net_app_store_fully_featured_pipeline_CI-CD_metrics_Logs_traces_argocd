@@ -1,0 +1,121 @@
+name: Flaskblog CI
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*.*.*"     #run this workflow once you pushed a new version of the branch
+    paths-ignore:
+      - "Project1/Project1_metrics_logs_traces_Argocd/flask-chart/values.yaml"
+
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4  # this will help me to apply that ci workflow.
+      - name: Set up Python
+        uses: actions/setup-python@v5  # this will help github to install python from that marketplace .
+        with:
+          python-version: "3.14"    #this will install the python version
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip      #upgrade pip
+
+          #  to be completed
+
+          pip install -r  Project1/Project1_metrics_logs_traces_Argocd/software/requirements.txt
+          pip install ruff black pytest     #install requirments for testing the image that we used to build the entire app
+      - name: Run Ruff           #this is a beautiful command to test the whole software stuff    
+        run: |
+          ruff check Project1/Project1_metrics_logs_traces_Argocd/software 
+      - name: Check Black
+        run: |
+          black Project1/Project1_metrics_logs_traces_Argocd/software
+          black --check Project1/Project1_metrics_logs_traces_Argocd/software
+      #- name: Run pytest 
+        #run: |
+          #pytest  Project1/Project1_metrics_logs_traces_Argocd/software
+  
+
+  helm:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+      - name: Helm lint
+        run: |
+          helm lint  Project1/Project1_metrics_logs_traces_Argocd/flask-chart  
+          # note that this lint will check whether or not this helm chart is valid or not
+          # if it valid -> it will be  1 linted + 0 charts failed.
+      - name: Render Helm templates
+        run: |
+          helm template flaskblog \
+           Project1/Project1_metrics_logs_traces_Argocd/flask-chart 
+      - name: Update Helm image tag
+        if: github.ref ==  'refs/heads/main'
+        env:
+           VERSION: ${{steps.version.outputs.version}}
+        run: |
+          VALUES_FILE="Project1/Project1_metrics_logs_traces_Argocd/flask-chart/values.yaml"
+
+          sed -i "s/^  tag:.*/  tag: \"$VERSION\"/" "$VALUES_FILE"   # 
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add "$VALUES_FILE"
+          git commit -m "chore: deploy Flaskblog $VERSION"
+          git push
+
+  docker:
+    needs: helm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v3 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Get version
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"    #this extract the version from git versions
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+
+
+
+      - name: Build and push multi-platform image
+        run: |
+          docker buildx build \
+          --platform linux/arm64,linux/amd64 \
+          -t abdulrahmanqasim/multiplats-github-test:${{steps.version.outputs.version}} \
+          --push Project1/Project1_metrics_logs_traces_Argocd/software
+
+  # security:
+  #   needs:
+  #     - docker
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Run Trivy
+  #       uses: aquasecurity/trivy-action@master
+  #       with:
+  #         image-ref: abdulrahmanqasim/multiplats-github-test:${{needs.docker.outputs.version}}
+  #         format: table
+  #         exit-code: '1'
+  #         ignore-unfixed: true
+  #         severity: CRITICAL,HIGH

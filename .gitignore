@@ -2,12 +2,10 @@ bin/
 .venv
 .git
 devbox.lock
-kind-config.yaml
-Project1/
-.github/workflows/ci.yaml
 host_path/
+kind-config.yaml
 
-
+Project1/
 
 
 
