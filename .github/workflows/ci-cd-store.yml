@@ -11,7 +11,7 @@ on:
     branches:
       - main
 permissions:
-  - read
+   contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
