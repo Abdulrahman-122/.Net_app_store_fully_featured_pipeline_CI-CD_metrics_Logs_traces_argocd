@@ -15,6 +15,11 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Project2/build_aside_projects/Electro_API2 
+    #as we put .github at parent directory 
+
     steps:
       - name: Checkout repository
         uses:  actions/checkout@v4
