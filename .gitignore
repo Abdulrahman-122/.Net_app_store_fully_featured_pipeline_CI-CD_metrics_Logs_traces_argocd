@@ -11,7 +11,7 @@ Project1/Project1_aws_prometheus_grafana/
 Project1/Project1_kind_Loki_promtail/
 Project1/Project1_kind_opentelemetry_tempo/
 Project1/Project1_kind_prometheus_grafana/
-Project1
+Project1/
 .github/workflows/ci.yaml
 
 
