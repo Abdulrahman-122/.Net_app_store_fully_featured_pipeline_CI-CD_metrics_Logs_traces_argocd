@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  namespace: my-ns1
+spec:
+  serviceName: mariadb
+  replicas: {{.Values.database.replicaCount}}
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+       - name: mariadb
+         image: {{.Values.database.image}}
+         ports:
+           - containerPort: {{.Values.database.port}}
+         resources:
+           requests:
+             cpu: {{.Values.database.resources.requests.cpu}}
+             memory: {{.Values.database.resources.requests.memory}}
+           limits:
+             cpu:  {{.Values.database.resources.limits.cpu}}
+
+             memory:  {{.Values.database.resources.limits.memory}}
+
+         readinessProbe:
+           exec:
+             command:
+               - sh
+               - -c
+               - mariadb-admin  ping -h 127.0.0.1 -u root --password="$MARIADB_ROOT_PASSWORD"
+           initialDelaySeconds: 10
+           periodSeconds: 10
+           timeoutSeconds: 5
+           failureThreshold: 3
+         livenessProbe:
+           exec:
+             command:
+               - sh
+               - -c
+               - mariadb-admin ping -h 127.0.0.1 -u root --password="$MARIADB_ROOT_PASSWORD"
+           initialDelaySeconds: 30
+           periodSeconds: 10
+           timeoutSeconds: 5
+           failureThreshold: 3
+
+         env:
+           - name: MARIADB_DATABASE
+             valueFrom:
+               configMapKeyRef:
+                 name: electro-config
+                 key: DB_NAME
+           - name: MARIADB_USER
+             valueFrom:
+               secretKeyRef:
+                 name: electro-secret
+                 key: DB_USER
+           - name: MARIADB_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: electro-secret
+                 key:  DB_PASSWORD
+           - name: MARIADB_ROOT_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: electro-secret
+                 key: DB_ROOT_PASSWORD
+         volumeMounts:
+           -  name: mariadb-storage
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+     - metadata:
+        name: mariadb-storage
+       spec:
+        accessModes:
+          - ReadWriteOnce      # that means  just one node can write to that storage not more than one.
+        resources:
+          requests:
+            storage: {{.Values.database.storage.size}}
+

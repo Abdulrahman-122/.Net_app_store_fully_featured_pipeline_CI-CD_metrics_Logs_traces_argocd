@@ -1,0 +1,13 @@
+apiVersion:  policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name:  electro-api-pdb
+  namespace: my-ns1
+spec:
+  minAvailable: {{.Values.pdb.minAvailable}}    #when doing  disruption keep at least  1 pod available.
+  selector:
+    matchLabels:
+      app: electro-api  #apply  that pdp to pods that has labels=electro-api
+
+# this resource   we use to  make voluntrily  disruption with minimum available pods to be   still while making  disruption this help us to make ugrade for pods and infrastructure.
+# protects availability

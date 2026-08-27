@@ -1,0 +1,15 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+    extraMounts:
+      - hostPath: /home/abdo/Cybersec/DevOps/devops-platform-lab/host_path/worker1
+        containerPath: /var/local-path-provisioner
+  - role: worker
+    extraMounts:
+     - hostPath: /home/abdo/Cybersec/DevOps/devops-platform-lab/host_path/worker2
+       containerPath: /var/local-path-provisioner
+networking:
+  disableDefaultCNI: true
+  podSubnet: 192.168.0.0/16

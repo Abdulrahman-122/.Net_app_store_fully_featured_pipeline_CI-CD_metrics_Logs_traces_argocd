@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: electro-api
+  namespace: my-ns1
+spec:
+  replicas: {{.Values.replicaCount}}
+  strategy:     # now this will be applied when you update the  image of  the  deployment....
+    type: {{.Values.strategy.type}} 
+    rollingUpdate:
+      maxUnavailable: {{.Values.strategy.maxUnavailable}}    #don't stop  any  pods those are running untill you create new ones like them
+      maxSurge: {{.Values.strategy.maxSurge}}    #  replace old one with new one.
+  selector:
+    matchLabels:
+      app: electro-api
+  template:
+    metadata:
+      labels:
+        app: electro-api
+    spec:
+      containers:
+        - name: electro-api
+          image: {{.Values.image.repo}}:{{.Values.image.tag}}
+          securityContext:
+            runAsNonRoot: true      #this will prevent pod to be able to use root
+            runAsUser: 10001        # this will allow pod to use user called 10001
+            runAsGroup: 10001       # also the group is 10001
+            allowPrivilegeEscalation: false    # remove any escalation in privileges.
+            readOnlyRootFilesystem: true       # this will prevent pod from writing anything inside it to make sure no attacker can't write any malware or whatever.
+            capabilities:
+              drop:
+                - ALL      #remove any privileges -> root can use 
+          volumeMounts:
+             - name: tmp
+               mountPath: /tmp
+
+          ports:
+            - containerPort: 5000
+          startupProbe:
+            httpGet:
+              path: /health/live
+              port: 5000
+            periodSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: {{.Values.resources.requests.cpu}}
+              memory: {{.Values.resources.requests.memory}}
+            limits:
+              cpu: {{.Values.resources.limits.cpu}}
+              memory: {{.Values.resources.limits.memory}}
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: electro-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: electro-config
+                  key:  ASPNETCORE_URLS
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: electro-secret
+                  key: CONNECTION_STRING
+            - name: JWT__KEY
+              valueFrom:
+                secretKeyRef:
+                  name: electro-secret
+                  key: JWT_KEY
+            - name: JWT__ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: electro-config
+                  key: JWT_ISSUER
+            - name: JWT__AUDIENCE
+              valueFrom:
+                configMapKeyRef:
+                  name: electro-config
+                  key: JWT_AUDIENCE
+      #
+      volumes:   #to make sure the app or the api will be run correctly as if it needs some installation when it's creating ... as we put above -> readonlyfilesystem so we can't write in any directory except that one  (/tmp)  => this volume you  can remove it  
+         - name: tmp
+           emptyDir: {} 

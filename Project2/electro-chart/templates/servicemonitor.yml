@@ -1,0 +1,21 @@
+{{- if .Values.serviceMonitor.enabled}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor-prometheus-app
+  namespace: monitoring
+  labels:
+    release: monitoring    #this is the released name that you installed  with  . helm  install releasename    prometheus-community/kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app:  electro-api
+  namespaceSelector:
+    matchNames:
+      - my-ns1
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+{{-  end}}
+

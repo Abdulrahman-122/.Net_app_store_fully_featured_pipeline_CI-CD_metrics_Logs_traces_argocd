@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mariadb-ingress
+  namespace: my-ns1
+spec:
+  podSelector:
+    matchLabels:
+      app: mariadb
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+           matchLabels:
+             app: electro-api
+      ports:
+        - protocol: TCP
+          port: 3306
+
+#this code will make mariadb being reachable using deployment pods 
+# no any pod  can reach it except that electro-api  pods. .
+#

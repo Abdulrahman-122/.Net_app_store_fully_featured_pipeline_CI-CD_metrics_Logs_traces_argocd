@@ -1,0 +1,33 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: electro-api-hpa
+  namespace: my-ns1
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1     #define the api that is responsible for running that deployment.
+    kind: Deployment
+    name: electro-api
+  minReplicas: {{.Values.hpa.minReplicas}}
+  maxReplicas: {{.Values.hpa.maxReplicas}}
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 60    # make scaledown reponse every 60s not change deletion each 1 s  
+      policies:
+        - type: Percent
+          value: 50  # each  scaledown will be at each  50%  of the current pods if we have 2 pods -> 50% of 2 =1 but if the minpods =2 this will not happen as we have limits
+          periodSeconds: 60   #it will apply this  in 60s
+      
+  metrics:
+    - type: Resource      
+      resource:
+        name: cpu   #look at cpu usage 
+        target:
+          type: Utilization
+          averageUtilization: {{.Values.hpa.cpu.averageUtilization}}   # make the  metrics at 60% if the cpu usage increase over 60% of the resources that we define at deploy it will apply either scale up or down

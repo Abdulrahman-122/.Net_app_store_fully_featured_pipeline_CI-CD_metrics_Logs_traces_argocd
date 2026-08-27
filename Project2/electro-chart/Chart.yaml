@@ -1,0 +1,7 @@
+apiVersion : v2
+name: electro
+description:  Electro API kuberenetes Application
+type:  application
+version: 0.1.0       #this is the helm chart version.
+appVersion: 1.0.0   #this is the app version(.net app)
+icon: https://mariadb.org 

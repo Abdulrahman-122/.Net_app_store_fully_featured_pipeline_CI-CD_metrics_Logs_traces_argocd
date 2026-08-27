@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: my-ns1
+spec:
+  podSelector: {}  # this will choose every pod inside this ns and apply that policy(which deny every route )
+  policyTypes:
+    - Ingress
+    - Egress

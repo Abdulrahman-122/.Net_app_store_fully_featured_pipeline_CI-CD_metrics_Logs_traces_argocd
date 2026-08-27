@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: electro-api
+  namespace: my-ns1
+  labels:
+    app: electro-api
+spec:
+  #type: ClusterIP
+  type: {{.Values.service.type}}
+  selector:
+    app: electro-api
+  ports:
+    - name: http
+      port: {{.Values.service.port}}
+      targetPort: {{.Values.service.targetPort}}
+      #addition for nodeport service
+      nodePort: {{.Values.service.nodePort}}    #choose number from : 30000:32767                
+      protocol: TCP
+      # to access this port outside this cluster: http://node-ip(workernodes ip not node-port):30000

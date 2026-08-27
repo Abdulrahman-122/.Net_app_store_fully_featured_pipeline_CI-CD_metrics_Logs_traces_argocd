@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace:  my-ns1
+spec:
+  podSelector: {}
+  policyTypes:
+    -  Egress
+  egress:
+    - to:
+        - namespaceSelector:
+           matchLabels:
+            kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        -  protocol: UDP
+           port: 53
+        -  protocol: TCP
+           port: 53
+
+#every pod in my-ns1  can send traffic  to  core dns in kube-system -> this dns is responsible for  translation (names -> ip addresses)
+#here -> we need every pod on the  namespace (my-ns1) 
+      #  to access dns  (this is good for practicing but for real projects -> every pod has it's own policy)
+

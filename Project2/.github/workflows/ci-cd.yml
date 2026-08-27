@@ -1,0 +1,31 @@
+name: Electro API  CI/CD
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*.*.*"
+    paths-ignore:
+      - "electro-chart/values.yaml"
+  pull_request:
+    branches:
+      - main
+permissions:
+  - write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses:  actions/checkout@v4
+      - name: Set up  .Net
+        uses: actions/setup-dotnet@v4
+        with:  
+          dotnet-version: "8.0.x"   #this will  fetch the latest version
+      - name: Restore Dependencies
+        run: dotnet  restore  ElectroAPI.csproj
+      - name: Build
+        run: dotnet build ElectroAPI.csproj --no-restore --configuration  Release
+      - name:  Test
+        run: dotnet test --no-build --configuration Release
+

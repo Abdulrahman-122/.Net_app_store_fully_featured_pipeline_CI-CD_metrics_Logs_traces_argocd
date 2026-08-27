@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: attacker
+  namespace: my-ns1
+spec:
+  containers:
+    - name: attacker
+      image: nicolaka/netshoot
+      command:
+        - sleep
+        - "3600"
+
+#notes;
+#after you apply everything related to networkpolicy 
+#just enter that pod => k exec -it attacker -- bash
+# try to do the following
+# this pod can't reach mariadb using that command ; nc -vz mariadb 3306
+# or even can't reach api on that url: curl http://electro-api:5000/health/live 
+# it will give you timeout

@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-egress
+  namespace: my-ns1
+spec:
+  podSelector:
+    matchLabels:
+      app: electro-api
+  policyTypes:
+    - Egress
+  egress:
+    # Allow API to send traffic to mariadb
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mariadb
+      ports:
+        - protocol: TCP
+          port: 3306
+    # - to:
+    #     # now allow api to access the core-dns of kube-system (dns) in order to send data to mariadb (api->core-dns->mariadb)
+    #      - namespaceSelector: {}   #choose the dns inside any namespace to send traffic to
+    #   ports:
+    #     - protocol: UDP
+    #       port: 53
+    #     - protocol: TCP
+    #       port: 53     #like UDP they listen on the sameone
+    #
+# you can specify the namespace that contain the dns 
+    - to:
+        -  namespaceSelector:
+             matchLabels:
+               kubernetes.io/metadata.name: kube-system
+           podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+

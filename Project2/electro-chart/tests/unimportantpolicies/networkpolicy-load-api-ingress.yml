@@ -1,0 +1,21 @@
+# apiVersion: networking.k8s.io/v1
+# kind: NetworkPolicy
+# metadata:
+#   name: load-generator-to-api
+#   namespace: my-ns1
+# spec:
+#   podSelector:
+#     matchLabels:
+#       app: electro-api
+#
+#   policyTypes:
+#     - Ingress
+#
+#   ingress:
+#     - from:
+#         - podSelector:
+#             matchLabels:
+#               app: load-generator
+#       ports:
+#         - protocol: TCP
+#           port: 5000
