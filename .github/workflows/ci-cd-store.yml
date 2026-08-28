@@ -49,7 +49,7 @@ jobs:
           helm template electro-api  Project2/electro-chart
 
 
-   docker-build:
+  docker-build:
      needs:
        - test
        - helm
