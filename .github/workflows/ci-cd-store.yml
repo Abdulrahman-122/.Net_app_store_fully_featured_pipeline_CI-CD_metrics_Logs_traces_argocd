@@ -72,10 +72,10 @@ jobs:
          id: version
          shell: bash
          run: |
-            if [[ "${GITHUB_REF_TYPE}" ==  "tag"]]; then
-            VERSION="${GITHUB_REF_NAME#v}"
+            if [[ "${GITHUB_REF_TYPE}" ==  "tag" ]]; then
+              VERSION="${GITHUB_REF_NAME#v}"
             else
-            VERSION="0.0.${GITHUB_RUN_NUMBER}"   
+              VERSION="0.0.${GITHUB_RUN_NUMBER}"   
             fi
             echo "version=$VERSION">>"$GITHUB_OUTPUT"
        - name: build and push multi-platforms image
