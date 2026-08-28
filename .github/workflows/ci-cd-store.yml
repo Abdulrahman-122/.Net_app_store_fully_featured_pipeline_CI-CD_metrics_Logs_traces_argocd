@@ -67,15 +67,15 @@ jobs:
        - name: Generate image version 
          id: version
          run: |
-           if [[ "${GITHUB_REF_TYPE}" ==  "tag"]];then
+           if [[ "${GITHUB_REF_TYPE}" ==  "tag"]]; then
            VERSION="${GITHUB_REF_NAME#v}"
            else
            VERSION="0.0.${GITHUB_RUN_NUMBER}"   
            fi
            echo "version=$VERSION">>"$GITHUB_OUTPUT"
     # if you push version=1.2.0 -> it will detected and updated image will have it but if you push main -> the output also will be numbers not :main -> 0.0.10 (example). 
-        - name: build and push multi-platforms image
-          run: |
+      - name: build and push multi-platforms image
+        run: |
             docker buildx build \
             --platform linux/amd64,linux/arm64 \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/electro-app:${{ steps.version.outputs.version }} \
