@@ -73,10 +73,18 @@ jobs:
             VERSION="0.0.${GITHUB_RUN_NUMBER}"   
             fi
             echo "version=$VERSION">>"$GITHUB_OUTPUT"
-    # if you push version=1.2.0 -> it will detected and updated image will have it but if you push main -> the output also will be numbers not :main -> 0.0.10 (example). 
-      - name: build and push multi-platforms image
+       - name: build and push multi-platforms image
         run: |
             docker buildx build \
             --platform linux/amd64,linux/arm64 \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/electro-app:${{ steps.version.outputs.version }} \
             --push Project2/build_aside_projects/Electro_API2/   
+
+
+
+
+
+
+
+            # if you push version=1.2.0 -> it will detected and updated image will have it but if you push main -> the output also will be numbers not :main -> 0.0.10 (example). 
+
