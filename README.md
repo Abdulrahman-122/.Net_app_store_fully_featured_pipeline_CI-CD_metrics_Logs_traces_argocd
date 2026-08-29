@@ -1,6 +1,14 @@
 # Electro API — Cloud-Native DevOps Platform
 
 - <img width="1513" height="972" alt="image" src="https://github.com/user-attachments/assets/70b6fb48-3afe-45e0-8410-e817e4af6049" />
+- <img width="1920" height="918" alt="image" src="https://github.com/user-attachments/assets/4253651f-e3ea-4a51-888d-d5d9e98230b1" />
+- <img width="1920" height="598" alt="image" src="https://github.com/user-attachments/assets/d643c07e-f39c-42c0-adde-0005f821080e" />
+- <img width="1886" height="885" alt="image" src="https://github.com/user-attachments/assets/f411928d-b894-46ac-8a9b-c92b0c522bbd" />
+- <img width="1904" height="811" alt="image" src="https://github.com/user-attachments/assets/24413e03-1949-48ca-b75a-515c7078abdd" />
+- <img width="1895" height="846" alt="image" src="https://github.com/user-attachments/assets/ccb107df-283c-43a5-840a-fd21c2d3d845" />
+- <img width="1907" height="925" alt="image" src="https://github.com/user-attachments/assets/83e7daa9-d94b-45af-9fc2-840ee6a6fdbd" />
+- ![Uploading image.png…]()
+
 
 - this is my google drive link, it contain some videos about this project: https://drive.google.com/drive/folders/1cmt_C-dhdqYVTULgQkVUdoy0XqjNiwVS?usp=sharing
 
