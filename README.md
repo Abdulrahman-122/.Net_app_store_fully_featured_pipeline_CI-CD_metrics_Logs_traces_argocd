@@ -2,6 +2,7 @@
 
 - <img width="1513" height="972" alt="image" src="https://github.com/user-attachments/assets/70b6fb48-3afe-45e0-8410-e817e4af6049" />
 
+- this is my google drive contain some videos about this project: https://drive.google.com/drive/folders/1cmt_C-dhdqYVTULgQkVUdoy0XqjNiwVS?usp=sharing
 
 ## Overview
 
