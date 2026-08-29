@@ -1,6 +1,6 @@
 # Electro API — Cloud-Native DevOps Platform
 
--  <img width="1234" height="947" alt="image" src="https://github.com/user-attachments/assets/e09502a3-8f10-4b4d-946a-acc9b71f4e2c" />
+- <img width="1513" height="972" alt="image" src="https://github.com/user-attachments/assets/70b6fb48-3afe-45e0-8410-e817e4af6049" />
 
 
 ## Overview
