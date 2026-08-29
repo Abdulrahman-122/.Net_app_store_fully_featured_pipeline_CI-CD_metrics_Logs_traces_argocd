@@ -7,7 +7,7 @@
 - <img width="1904" height="811" alt="image" src="https://github.com/user-attachments/assets/24413e03-1949-48ca-b75a-515c7078abdd" />
 - <img width="1895" height="846" alt="image" src="https://github.com/user-attachments/assets/ccb107df-283c-43a5-840a-fd21c2d3d845" />
 - <img width="1907" height="925" alt="image" src="https://github.com/user-attachments/assets/83e7daa9-d94b-45af-9fc2-840ee6a6fdbd" />
-- ![Uploading image.png…]()
+-  <img width="1847" height="882" alt="image" src="https://github.com/user-attachments/assets/b1a9a919-4bec-44d9-b752-7405bdabe949" />
 
 
 - this is my google drive link, it contain some videos about this project: https://drive.google.com/drive/folders/1cmt_C-dhdqYVTULgQkVUdoy0XqjNiwVS?usp=sharing
