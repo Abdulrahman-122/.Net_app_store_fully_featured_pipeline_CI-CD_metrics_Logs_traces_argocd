@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: store-argocd
+  namespace: argocd
+spec:
+  project: project2 
+  source:
+    repoURL: https://github.com/Abdulrahman-122/.Net_app_store_fully_featured_pipeline_CI-CD_metrics__argocd
+    targetRevision: HEAD
+    path: Project2/electro-chart/
+    helm:
+      valueFiles:
+         - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: my-ns1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

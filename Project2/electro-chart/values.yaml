@@ -4,7 +4,8 @@ image:
   tag: v2.0.0
   pullPolicy:  IfNotPresent
 service:
-  type: NodePort
+  #type: NodePort
+  type: ClusterIP
   port: 5000
   targetPort: 5000
   nodePort:  30001
