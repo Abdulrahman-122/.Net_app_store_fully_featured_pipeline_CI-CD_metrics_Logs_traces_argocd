@@ -13,4 +13,4 @@ spec:
       services:
         - name: electro-api
           port: 5000
-          nodePortLB: true   # this  line to tell traefik  to direct the traffic to nodeport service if you don't  want that->okay remove it and it will redirect the traffic to the clusterip on the deploy pod
+          #nodePortLB: true   # this  line to tell traefik  to direct the traffic to nodeport service if you don't  want that->okay remove it and it will redirect the traffic to the clusterip on the deploy pod

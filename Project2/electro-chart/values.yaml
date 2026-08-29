@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repo:  abdulrahmanqasim/electro-app
-  tag: v2.0.0
+  tag: 0.0.19
   pullPolicy:  IfNotPresent
 service:
   #type: NodePort
